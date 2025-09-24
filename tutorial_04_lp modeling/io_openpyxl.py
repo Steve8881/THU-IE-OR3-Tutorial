@@ -36,14 +36,15 @@ def readData() -> tuple[dict, dict, dict]:
     inputSheet = inputBook[constant.SHEET_NAME]
 
     # Read data from the inputSheet and create dictionaries
-    productProfits = {constant.DOORS: inputSheet.cell(constant.PROFIT_ROW, constant.DOORS_COL).value,
-                      constant.WINDOWS: inputSheet.cell(constant.PROFIT_ROW, constant.WINDOWS_COL).value
-                      }
-    
     productProfits = {
-    product: inputSheet.cell(constant.PROFIT_ROW, getattr(constant, f"{product}_COL")).value
-    for product in constant.PRODUCT_NAMES
-}
+        constant.DOORS: inputSheet.cell(constant.PROFIT_ROW, constant.DOORS_COL).value,
+        constant.WINDOWS: inputSheet.cell(constant.PROFIT_ROW, constant.WINDOWS_COL).value
+    }
+
+    productProfits = {
+        product: inputSheet.cell(constant.PROFIT_ROW, getattr(constant, f"{product}_COL")).value
+        for product in constant.PRODUCT_NAMES
+    }
 
     plantProductHours = {
         plantName: {

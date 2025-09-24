@@ -18,14 +18,8 @@ def readData() -> tuple[dict, dict, dict]:
 
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    productProfitCols = {
-        'Doors': constant.INPUT_DOORS_PROFIT_COL,
-        'Windows': constant.INPUT_WINDOWS_PROFIT_COL
-    }
-    productHourCols = {
-        'Doors': constant.INPUT_DOORS_HOURS_COL,
-        'Windows': constant.INPUT_WINDOWS_HOURS_COL
-    }
+    productProfitCols = {'Doors': constant.INPUT_DOORS_PROFIT_COL, 'Windows': constant.INPUT_WINDOWS_PROFIT_COL}
+    productHourCols = {'Doors': constant.INPUT_DOORS_HOURS_COL, 'Windows': constant.INPUT_WINDOWS_HOURS_COL}
 
     # Read data from the Excel sheet into a pandas DataFrame.
     productProfits = {}
@@ -71,7 +65,7 @@ def writeData(soln, objVal) -> None:
     # Note: We construct the full variable name to look up the value in the solution dictionary.
     doorsVarName = f'{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[0]}'
     windowsVarName = f'{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[1]}'
-    
+
     outputValues = {
         constant.OUTPUT_DOORS_COL: soln.get(doorsVarName, 0),
         constant.OUTPUT_WINDOWS_COL: soln.get(windowsVarName, 0),
@@ -86,10 +80,4 @@ def writeData(soln, objVal) -> None:
         data.loc[rowIndex, colIndex] = value
 
     # Write DataFrame back to the Excel sheet.
-    data.to_excel(
-        constant.DATA_PATH,
-        sheet_name=constant.SHEET_NAME,
-        index=False,
-        header=False
-    )
-
+    data.to_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, index=False, header=False)
