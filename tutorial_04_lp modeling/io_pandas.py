@@ -69,6 +69,7 @@ def writeDataPandas(soln, objVal) -> None:
     startRow = constant.OUTPUT_BATCHES_PRODUCED_START_ROW - 1
     startCol = constant.OUTPUT_BATCHES_PRODUCED_START_COL - 1
     for j, product in enumerate(constant.PRODUCT_NAMES):
+        varName = product
         value = soln.get(product, 0)
         data.loc[startRow, startCol + j] = value
 
@@ -79,3 +80,4 @@ def writeDataPandas(soln, objVal) -> None:
 
     # Save to Excel file.
     data.to_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, index=False, header=False)
+
