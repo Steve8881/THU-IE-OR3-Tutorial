@@ -64,9 +64,22 @@ def formulateModel(productProfits, plantProductHours, plantAvailableHours) -> gr
     return model
 
 
-def solveModel(model) -> tuple[dict, float]:
+def solveModel(model) -> None:
     """
     Optimize the given Gurobi model.
+
+    Parameters
+    ----------
+    model : gurobipy.Model
+        The Gurobi model to be optimized
+
+    """
+    model.optimize()
+
+
+def getOptimalSolution(model) -> dict[str, float]:
+    """
+    Get the optimal solution of the (optimized) Gurobi model.
 
     Parameters
     ----------
@@ -82,8 +95,6 @@ def solveModel(model) -> tuple[dict, float]:
     objVal : float
         The optimal objective function value
     """
-    model.optimize()
-
     soln = {}
     for var in model.getVars():
         soln[var.VarName] = var.X
@@ -100,7 +111,7 @@ def solveModel(model) -> tuple[dict, float]:
     return soln, objVal
 
 
-def getOptimalDualVariableValues(model, constrNames=None) -> dict[str, float]:
+def getOptimalDualSolution(model, constrNames=None) -> dict[str, float]:
     """
     Get the optimal dual variable values of a given set of constraints.
 
@@ -151,20 +162,6 @@ def getOptimalDualVariableValues(model, constrNames=None) -> dict[str, float]:
     return duals
 
 
-def saveModel(model, filePath) -> None:
-    """
-    Save the given Gurobi model to a file, either in MPS or LP format.
-
-    Parameters
-    ----------
-    model : gurobipy.Model
-        The Gurobi model to be saved
-    filePath : str
-        The path to the file to save the model to
-    """
-    model.write(filePath)
-
-
 def readModel(filePath) -> grb.Model:
     """
     Load a Gurobi model from a MPS or LP file.
@@ -182,3 +179,17 @@ def readModel(filePath) -> grb.Model:
     model = grb.read(filePath)
 
     return model
+
+
+def saveModel(model, filePath) -> None:
+    """
+    Save the given Gurobi model to a file, either in MPS or LP format.
+
+    Parameters
+    ----------
+    model : gurobipy.Model
+        The Gurobi model to be saved
+    filePath : str
+        The path to the file to save the model to
+    """
+    model.write(filePath)

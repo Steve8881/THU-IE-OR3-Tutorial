@@ -8,23 +8,32 @@ from io_pandas import readDataPandas, writeDataPandas
 
 def main():
     """
-    Main function: Execute linear programming solution process
+    Main function
     """
-    print("Wyndor Production Planning Optimization")
 
-    # Read data
-    # Two methods available: readDataOpenpyxl() and readDataPandas()
-    # productProfits, plantProductHours, plantAvailableHours = readDataOpenpyxl()
-    productProfits, plantProductHours, plantAvailableHours = readDataPandas()
+    #
+    # Step 1: Read data from the Excel file
+    #
 
-    # Write results back to Excel
-    # Two methods available: writeDataOpenpyxl() and writeDataPandas()
-    # Skip modeling and solving steps
-    soln = {"Product 1": 2, "Product 2": 6}  # Example solution
-    objVal = 36000  # Example objective value
-    
-    # writeDataOpenpyxl(soln, objVal)
-    writeDataPandas(soln, objVal)
+    # Option 1) Use openpyxl
+    productProfits, plantProductHours, plantAvailableHours = readDataOpenpyxl()
+
+    # Option 2) Use pandas
+    # productProfits, plantProductHours, plantAvailableHours = readDataPandas()
+
+    #
+    # Step 2: Write the solution to the Excel file
+    #
+
+    # An example solution
+    soln = {"Product 1": 2, "Product 2": 6}
+    objVal = 36000
+
+    # Option 1) Use openpyxl
+    writeDataOpenpyxl(soln, objVal)
+
+    # Option 2) Use pandas
+    # writeDataPandas(soln, objVal)
 
 
 if __name__ == "__main__":
