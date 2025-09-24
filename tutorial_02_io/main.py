@@ -26,7 +26,7 @@ def main():
     #
 
     # An example solution
-    soln = {"Product 1": 2, "Product 2": 6}
+    soln = {"Doors": 2, "Windows": 6}
     objVal = 36000
 
     # Option 1) Use openpyxl
