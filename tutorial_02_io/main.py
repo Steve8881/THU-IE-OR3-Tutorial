@@ -1,10 +1,9 @@
 """
-Wyndor Production Planning Optimization Main Program
+Wyndor Production Planning Optimization Main Program for only I/O operations
 """
 
 from io_openpyxl import readDataOpenpyxl, writeDataOpenpyxl
 from io_pandas import readDataPandas, writeDataPandas
-from model import formulateModel, solveModel, getOptimalDualVariableValues
 
 
 def main():
@@ -18,17 +17,12 @@ def main():
     # productProfits, plantProductHours, plantAvailableHours = readDataOpenpyxl()
     productProfits, plantProductHours, plantAvailableHours = readDataPandas()
 
-    # Build model
-    model = formulateModel(productProfits, plantProductHours, plantAvailableHours)
-
-    # Solve model
-    soln, objVal = solveModel(model)
-
-    # Extract dual variables
-    # dualVariables = getOptimalDualVariableValues(model)
-
     # Write results back to Excel
     # Two methods available: writeDataOpenpyxl() and writeDataPandas()
+    # Skip modeling and solving steps
+    soln = {"Product 1": 2, "Product 2": 6}  # Example solution
+    objVal = 36000  # Example objective value
+    
     # writeDataOpenpyxl(soln, objVal)
     writeDataPandas(soln, objVal)
 
