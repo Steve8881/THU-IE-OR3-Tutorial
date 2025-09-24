@@ -4,6 +4,8 @@ Formulate and solve the Wyndor Example using Gurobi.
 
 import gurobipy as grb
 
+import constant
+
 
 def formulateModel(productProfits, plantProductHours,
                    plantAvailableHours) -> grb.Model:
@@ -34,7 +36,7 @@ def formulateModel(productProfits, plantProductHours,
     """
 
     # * Create a Gurobi model.
-    model = grb.Model("Wyndor")
+    model = grb.Model(constant.MODEL_NAME)
 
     # * Define decision variables.
     batchProductionDecisions = {}
@@ -43,7 +45,7 @@ def formulateModel(productProfits, plantProductHours,
             lb=0.0,
             ub=grb.GRB.INFINITY,
             vtype=grb.GRB.CONTINUOUS,
-            name=f"Batch_produced_of_{product}")
+            name=f"{constant.VAR_NAME_PREFIX}{product}")
 
     # * Define the objective function.
     objExpr = grb.LinExpr()
@@ -59,7 +61,7 @@ def formulateModel(productProfits, plantProductHours,
             lhsExpr += hour * batchProductionDecisions[product]
 
         model.addConstr(lhsExpr <= availableHour,
-                        f"{plant}_available_hour_constr")
+                        f"{constant.CONSTR_NAME_PREFIX}{plant}")
 
     # * Return the model.
     return model
