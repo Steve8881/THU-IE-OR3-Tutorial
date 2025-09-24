@@ -154,3 +154,36 @@ def getOptimalDualVariableValues(model, constrNames=None) -> dict[str, float]:
             print(f'{constrName}: Not found')
 
     return duals
+
+
+def saveModel(model, filePath) -> None:
+    """
+    Save the given Gurobi model to a file, either in MPS or LP format.
+
+    Parameters
+    ----------
+    model : gurobipy.Model
+        The Gurobi model to be saved
+    filePath : str
+        The path to the file to save the model to
+    """
+    model.write(filePath)
+
+
+def readModel(filePath) -> grb.Model:
+    """
+    Load a Gurobi model from a MPS or LP file.
+
+    Parameters
+    ----------
+    filePath : str
+        The path to the file to load the model from
+
+    Returns
+    -------
+    model : gurobipy.Model
+        The loaded Gurobi model
+    """
+    model = grb.read(filePath)
+
+    return model
