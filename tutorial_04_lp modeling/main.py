@@ -15,7 +15,7 @@ def main():
     
   # Read data from Excel file
     # Two methods available: from io_pandas import read_data, print_results OR from io_openpyxl import read_data, print_results
-    # Students can modify this line to try different data reading approaches
+    # You can modify the "from ··· import ··" line to try different data reading methods
     products_data, products_plants_data, plants_data = read_data()
     
     # Build model
