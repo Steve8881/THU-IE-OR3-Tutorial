@@ -16,7 +16,7 @@ def main():
     # Read data from Excel file
     # Two methods available: from io_openpyxl import readDataOpenpyxl OR from io_pandas import readDataPandas
     # You can modify the "from ··· import ··" line to try different data reading methods
-    productsData, productsPlantsData, plantsData = readDataOpenpyxl()
+    productsData, productsPlantsData, plantsData = readDataOpenpyxl(DATA_PATH)
 
     # Build model
     model = formulateModel(productsData, productsPlantsData, plantsData)
