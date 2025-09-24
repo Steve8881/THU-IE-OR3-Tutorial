@@ -33,9 +33,6 @@ OUTPUT_PROFIT_COL = 6
 # Product names list
 PRODUCT_NAMES = ['Doors', 'Windows'] 
 
-# Data labels
-PROFIT_PER_BATCH = 'Profit per batch'
-HOURS_AVAILABLE = 'Hours available'
 
 # Plant names list
 PLANT_NAMES = ['Plant 1', 'Plant 2', 'Plant 3']
