@@ -6,9 +6,6 @@ Constants definition module
 DATA_PATH = "./data/wyndor.xlsx"
 SHEET_NAME = "Data"
 
-LP_PATH = "./data/wyndor.lp"
-MPS_PATH = "./data/wyndor.mps"
-
 # Profit per batch data location (Doors & Windows)
 INPUT_PROFIT_ROW = 4
 INPUT_PROFIT_DOORS_COL = 2
