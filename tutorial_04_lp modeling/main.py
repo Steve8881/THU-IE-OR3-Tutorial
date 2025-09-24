@@ -19,13 +19,16 @@ def main():
     productsData, productsPlantsData, plantsData = readDataOpenpyxl()
 
     # Build model
-    model = formulateModel(products_data, products_plants_data, plants_data)
+    model = formulateModel(productsData, productsPlantsData, plantsData)
     
     # Solve model
     solutionResults, objValue = solveModel(model)
     
     # Extract dual variables
     dualVariables = getOptimalDualVariableValues(model)
+
+    # Write results back to Excel
+    writeDataOpenpyxl(solutionResults, objValue)
 
 if __name__ == "__main__":
     main()
