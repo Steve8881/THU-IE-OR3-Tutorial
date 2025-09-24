@@ -33,11 +33,15 @@ HOURS_AVAILABLE = 'Hours available'
 # Plant names list
 PLANT_NAMES = ['Plant 1', 'Plant 2', 'Plant 3']
 
+#
+# Model related constants
+#
+
 # Model name
 MODEL_NAME = "Wyndor"
 
 # Decision variable name prefix
-VAR_NAME_PREFIX = "Var_BatchProduced_"
+MODEL_VAR_NAME_PREFIX = "Var_BatchProduced_"
 
 # Constraint name prefix
-CONSTR_NAME_PREFIX = "Constr_AvailableHours_"
+MODEL_CONSTR_NAME_PREFIX = "Constr_AvailableHours_"
