@@ -58,7 +58,7 @@ def main():
     # Optional: Extract dual variables.
     #
 
-    # dualVariables = getOptimalDualVariableValues(model)
+    # dualVariables = getOptimalDualSolution(model)
 
     #
     # Step 3: Write the solution to the Excel file.

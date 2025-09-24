@@ -69,8 +69,7 @@ def writeDataPandas(soln, objVal) -> None:
     startRow = constant.OUTPUT_BATCHES_PRODUCED_START_ROW - 1
     startCol = constant.OUTPUT_BATCHES_PRODUCED_START_COL - 1
     for j, product in enumerate(constant.PRODUCT_NAMES):
-        varName = f'{constant.MODEL_VAR_NAME_PREFIX}{product}'
-        value = soln.get(varName, 0)
+        value = soln.get(product, 0)
         data.loc[startRow, startCol + j] = value
 
     # Write the total profit solution.
