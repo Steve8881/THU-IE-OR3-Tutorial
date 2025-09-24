@@ -7,8 +7,7 @@ import gurobipy as grb
 import constant
 
 
-def formulateModel(productProfits, plantProductHours,
-                   plantAvailableHours) -> grb.Model:
+def formulateModel(productProfits, plantProductHours, plantAvailableHours) -> grb.Model:
     """
     Formulate a Gurobi model based on the given instance data.
 
@@ -41,11 +40,10 @@ def formulateModel(productProfits, plantProductHours,
     # Define decision variables.
     batchProductionDecisions = {}
     for product, profit in productProfits.items():
-        batchProductionDecisions[product] = model.addVar(
-            lb=0.0,
-            ub=grb.GRB.INFINITY,
-            vtype=grb.GRB.CONTINUOUS,
-            name=f'{constant.MODEL_VAR_NAME_PREFIX}{product}')
+        batchProductionDecisions[product] = model.addVar(lb=0.0,
+                                                         ub=grb.GRB.INFINITY,
+                                                         vtype=grb.GRB.CONTINUOUS,
+                                                         name=f'{constant.MODEL_VAR_NAME_PREFIX}{product}')
 
     # Define the objective function.
     objExpr = grb.LinExpr()
@@ -60,8 +58,7 @@ def formulateModel(productProfits, plantProductHours,
         for product, hour in plantProductHours[plant].items():
             lhsExpr += hour * batchProductionDecisions[product]
 
-        model.addConstr(lhsExpr <= availableHour,
-                        f'{constant.MODEL_CONSTR_NAME_PREFIX}{plant}')
+        model.addConstr(lhsExpr <= availableHour, f'{constant.MODEL_CONSTR_NAME_PREFIX}{plant}')
 
     # Return the model.
     return model
@@ -132,9 +129,7 @@ def getOptimalDualVariableValues(model, constrNames=None) -> dict[str, float]:
 
         for constr in constrs:
             duals[constr.constrName] = constr.pi
-            print(
-                f'{constr.constrName}: Optimal dual variable value = {constr.pi}'
-            )
+            print(f'{constr.constrName}: Optimal dual variable value = {constr.pi}')
 
         return duals
 
@@ -156,7 +151,7 @@ def getOptimalDualVariableValues(model, constrNames=None) -> dict[str, float]:
     return duals
 
 
-def saveModel(model, filePath) -> None:
+def writeModel(model, filePath) -> None:
     """
     Save the given Gurobi model to a file, either in MPS or LP format.
 
