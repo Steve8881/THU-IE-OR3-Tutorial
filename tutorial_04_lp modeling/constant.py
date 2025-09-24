@@ -3,8 +3,8 @@ Constants definition module
 """
 
 # Data file path and worksheet name
-DATA_PATH = 'wyndor.xlsx'
-SHEET_NAME = 'Data'
+DATA_PATH = "data/wyndor.xlsx"
+SHEET_NAME = "Data"
 
 # Profit per batch data location (Doors & Windows)
 INPUT_PROFIT_ROW = 4
@@ -20,7 +20,6 @@ INPUT_HOURS_WINDOWS_COL = 3
 INPUT_HOURS_AVAILABLE_START_ROW = 7
 INPUT_HOURS_AVAILABLE_COL = 6
 
-
 # Output result location
 OUTPUT_ROW = 12
 OUTPUT_DOORS_COL = 2
@@ -28,21 +27,20 @@ OUTPUT_WINDOWS_COL = 3
 OUTPUT_PROFIT_COL = 6
 
 # Product names list
-PRODUCT_NAMES = ['Doors', 'Windows'] 
-
+PRODUCT_NAMES = ["Doors", "Windows"]
 
 # Plant names list
-PLANT_NAMES = ['Plant 1', 'Plant 2', 'Plant 3']
+PLANT_NAMES = ["Plant 1", "Plant 2", "Plant 3"]
 
 #
 # Model related constants
 #
 
 # Model name
-MODEL_NAME = 'Wyndor'
+MODEL_NAME = "Wyndor"
 
 # Decision variable name prefix
-MODEL_VAR_NAME_PREFIX = 'Var_BatchProduced_'
+MODEL_VAR_NAME_PREFIX = "Var_BatchProduced_"
 
 # Constraint name prefix
-MODEL_CONSTR_NAME_PREFIX = 'Constr_AvailableHours_'
+MODEL_CONSTR_NAME_PREFIX = "Constr_AvailableHours_"

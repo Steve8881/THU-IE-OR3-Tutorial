@@ -58,7 +58,7 @@ def formulateModel(productProfits, plantProductHours, plantAvailableHours) -> gr
         for product, hour in plantProductHours[plant].items():
             lhsExpr += hour * batchProductionDecisions[product]
 
-        model.addConstr(lhsExpr <= availableHour, f'{constant.MODEL_CONSTR_NAME_PREFIX}{plant}')
+        model.addConstr(lhsExpr <= availableHour, f"{constant.MODEL_CONSTR_NAME_PREFIX}{plant}")
 
     # Return the model.
     return model
@@ -91,11 +91,11 @@ def solveModel(model) -> tuple[dict, float]:
     objVal = model.objVal
 
     # Print the optimal solutions and objective function value.
-    print('\nThe optimal solutions:')
+    print("\nThe optimal solutions:")
     for varName, varValue in soln.items():
         print(f"{varName}: {varValue}")
 
-    print(f'The optimal objective function value is: {objVal}')
+    print(f"The optimal objective function value is: {objVal}")
 
     return soln, objVal
 
@@ -129,7 +129,7 @@ def getOptimalDualVariableValues(model, constrNames=None) -> dict[str, float]:
 
         for constr in constrs:
             duals[constr.constrName] = constr.pi
-            print(f'{constr.constrName}: Optimal dual variable value = {constr.pi}')
+            print(f"{constr.constrName}: Optimal dual variable value = {constr.pi}")
 
         return duals
 
@@ -137,16 +137,16 @@ def getOptimalDualVariableValues(model, constrNames=None) -> dict[str, float]:
         constrNames = [constrNames]
 
     if not isinstance(constrNames, list):
-        raise ValueError('constrNames must be a string or a list of strings')
+        raise ValueError("constrNames must be a string or a list of strings")
 
     for constrName in constrNames:
         constr = model.getConstrByName(constrName)
         if constr is not None:
             duals[constrName] = constr.pi
-            print(f'{constrName}: Optimal dual variable value = {constr.pi}')
+            print(f"{constrName}: Optimal dual variable value = {constr.pi}")
         else:
             duals[constrName] = None
-            print(f'{constrName}: Not found')
+            print(f"{constrName}: Not found")
 
     return duals
 
