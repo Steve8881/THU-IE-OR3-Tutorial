@@ -22,14 +22,13 @@ def main():
     model = formulateModel(productsData, productsPlantsData, plantsData)
 
     # Solve model
-    solutionResults, objValue = solveModel(model)
+    soln, objValue = solveModel(model)
 
-    # Extract dual variables
-    dualVariables = getOptimalDualVariableValues(model)
+    # Extract dual variables if use this code
+    # dualVariables = getOptimalDualVariableValues(model)
 
     # Write results back to Excel
-    writeDataOpenpyxl(solutionResults, objValue)
-    # writeDataPandas(solutionResults, objValue)
+    writeDataOpenpyxl(soln, objValue)
 
 
 if __name__ == "__main__":
