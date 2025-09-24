@@ -14,7 +14,7 @@ def main():
     print("Wyndor Production Planning Optimization")
     
   # Read data from Excel file
-    # Two methods available: read_data_openpyxl() or read_data_pandas()
+    # Two methods available: from io_pandas import read_data, print_results OR from io_openpyxl import read_data, print_results
     # Students can modify this line to try different data reading approaches
     products_data, products_plants_data, plants_data = read_data()
     
