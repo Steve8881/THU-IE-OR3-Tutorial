@@ -24,8 +24,8 @@ def main():
     # Solve model
     solutionResults, objValue = solveModel(model)
 
-    # Extract dual variables
-    dualVariables = getOptimalDualVariableValues(model)
+    # Extract dual variables if use this code
+    # dualVariables = getOptimalDualVariableValues(model)
 
     # Write results back to Excel
     writeDataOpenpyxl(solutionResults, objValue)
