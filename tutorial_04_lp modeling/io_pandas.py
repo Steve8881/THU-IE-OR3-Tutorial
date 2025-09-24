@@ -9,6 +9,23 @@ import constant
 def readData():
     """
     Given an Excel file, read production planning data from Excel file using pandas.
+
+    Returns
+    -------
+    productProfits : dict
+        The profit per batch for each product
+        - Keys: product names (`Doors`, `Windows`)
+        - Values: profit per batch
+    plantProductHours : nested dict
+        The hours required to produce one batch of each product at each plant
+        - Keys: plant names (`Plant 1`, `Plant 2`, `Plant 3`)
+        - Values: dict
+            - Keys: product names (`Doors` and `Windows`)
+            - Values: hours required
+    plantAvailableHours : dict
+        The available hours at each plant
+        - Keys: plant names (`Plant 1`, `Plant 2`, `Plant 3`)
+        - Values: available hours
     """
     # Read data from the Excel sheet into a pandas DataFrame.
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
@@ -38,6 +55,15 @@ def readData():
 def writeData(products_solution, total_profit):
     """
     Write the solution back to the Excel file using pandas.
+
+    Parameters
+    ----------
+    soln : dict
+        The optimal solutions
+        - Keys: variable names
+        - Values: optimal decision variable values
+    objVal : float
+        The optimal objective function value
     """
     # Create a pandas DataFrame from the solution.
     output_data = pd.DataFrame(
