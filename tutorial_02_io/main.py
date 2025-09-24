@@ -21,11 +21,14 @@ def main():
     # Option 2) Use pandas
     # productProfits, plantProductHours, plantAvailableHours = readDataPandas()
 
-    print('productProfits:', productProfits)
+    print("Profit per batch:")
+    print(productProfits, "\n")
 
-    print('plantProductHours:', plantProductHours)
+    print('Hours used per batch produced at each plant:')
+    print(plantProductHours, "\n")
 
-    print('plantAvailableHours:', plantAvailableHours)
+    print('Available hours at each plant:')
+    print(plantAvailableHours, "\n")
 
     #
     # Step 2: Write the solution to the Excel file
