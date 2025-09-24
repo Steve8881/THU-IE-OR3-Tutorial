@@ -35,10 +35,10 @@ def formulateModel(productProfits, plantProductHours,
         The formulated Gurobi model
     """
 
-    # * Create a Gurobi model.
+    # Create a Gurobi model.
     model = grb.Model(constant.MODEL_NAME)
 
-    # * Define decision variables.
+    # Define decision variables.
     batchProductionDecisions = {}
     for product, profit in productProfits.items():
         batchProductionDecisions[product] = model.addVar(
@@ -47,13 +47,13 @@ def formulateModel(productProfits, plantProductHours,
             vtype=grb.GRB.CONTINUOUS,
             name=f"{constant.VAR_NAME_PREFIX}{product}")
 
-    # * Define the objective function.
+    # Define the objective function.
     objExpr = grb.LinExpr()
     for product, profit in productProfits.items():
         objExpr += profit * batchProductionDecisions[product]
     model.setObjective(objExpr, grb.GRB.MAXIMIZE)
 
-    # * Define the constraints.
+    # Define the constraints.
     for plant, availableHour in plantAvailableHours.items():
         # For each plant, the total used hours <= the available hours.
         lhsExpr = grb.LinExpr()
@@ -63,7 +63,7 @@ def formulateModel(productProfits, plantProductHours,
         model.addConstr(lhsExpr <= availableHour,
                         f"{constant.CONSTR_NAME_PREFIX}{plant}")
 
-    # * Return the model.
+    # Return the model.
     return model
 
 
@@ -93,7 +93,7 @@ def solveModel(model) -> tuple[dict, float]:
 
     objVal = model.objVal
 
-    # * Print the optimal solutions and objective function value.
+    # Print the optimal solutions and objective function value.
     print("\nThe optimal solutions:")
     for varName, varValue in soln.items():
         print(f"{varName}: {varValue}")
