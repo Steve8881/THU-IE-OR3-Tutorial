@@ -37,4 +37,7 @@ PLANT_NAMES = ['Plant 1', 'Plant 2', 'Plant 3']
 MODEL_NAME = "Wyndor"
 
 # Decision variable name prefix
-VAR_NAME_PREFIX = "Batch_produced"
+VAR_NAME_PREFIX = "Var_BatchProduced_"
+
+# Constraint name prefix
+CONSTR_NAME_PREFIX = "Constr_AvailableHours_"

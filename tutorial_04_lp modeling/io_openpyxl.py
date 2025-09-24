@@ -14,14 +14,16 @@ def readData():
     inputSheet = inputBook[C.SHEET_NAME]
 
     # Read data from the inputSheet and create dictionaries
-    productProfits = {C.DOORS: inputSheet.cell(C.PROFIT_ROW, C.DOORS_COL).value,
-                      C.WINDOWS: inputSheet.cell(C.PROFIT_ROW, C.WINDOWS_COL).value
-                      }
+    productProfits = {
+        C.DOORS: inputSheet.cell(C.PROFIT_ROW, C.DOORS_COL).value,
+        C.WINDOWS: inputSheet.cell(C.PROFIT_ROW, C.WINDOWS_COL).value
+    }
 
     plantProductHours = {
         plantName: {
             C.DOORS: inputSheet.cell(C.HOURS_START_ROW + i, C.DOORS_COL).value,
-            C.WINDOWS: inputSheet.cell(C.HOURS_START_ROW + i, C.WINDOWS_COL).value
+            C.WINDOWS: inputSheet.cell(C.HOURS_START_ROW + i,
+                                       C.WINDOWS_COL).value
         }
         for i, plantName in enumerate(C.PLANT_NAMES)
     }
