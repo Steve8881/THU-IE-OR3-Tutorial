@@ -15,8 +15,8 @@ def main():
 
     # Read data
     # Two methods available: readDataOpenpyxl() and readDataPandas()
-    productProfits, plantProductHours, plantAvailableHours = readDataOpenpyxl()
-    # productProfits, plantProductHours, plantAvailableHours = readDataPandas()
+    # productProfits, plantProductHours, plantAvailableHours = readDataOpenpyxl()
+    productProfits, plantProductHours, plantAvailableHours = readDataPandas()
 
     # Build model
     model = formulateModel(productProfits, plantProductHours, plantAvailableHours)
@@ -29,8 +29,8 @@ def main():
 
     # Write results back to Excel
     # Two methods available: writeDataOpenpyxl() and writeDataPandas()
-    writeDataOpenpyxl(soln, objVal)
-    # writeDataPandas(soln, objVal)
+    # writeDataOpenpyxl(soln, objVal)
+    writeDataPandas(soln, objVal)
 
 
 if __name__ == "__main__":

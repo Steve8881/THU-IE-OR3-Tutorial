@@ -56,6 +56,7 @@ def formulateModel(productProfits, plantProductHours, plantAvailableHours) -> gr
         # For each plant, the total used hours <= the available hours.
         lhsExpr = grb.LinExpr()
         for product, hour in plantProductHours[plant].items():
+            print('111', hour)
             lhsExpr += hour * batchProductionDecisions[product]
 
         model.addConstr(lhsExpr <= availableHour, f"{plant}")
