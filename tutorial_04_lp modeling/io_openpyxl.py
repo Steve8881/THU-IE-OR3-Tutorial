@@ -37,25 +37,24 @@ def readDataOpenpyxl() -> tuple[dict, dict, dict]:
 
     # Read data from the inputSheet and create dictionaries
     productProfits = {
-        product: inputSheet.cell(constant.INPUT_PROFIT_ROW, getattr(
-            constant, f"INPUT_PROFIT_{product.upper()}_COL")).value
+        product: inputSheet.cell(constant.INPUT_PROFIT_ROW, getattr(constant,
+                                                                    f"INPUT_PROFIT_{product.upper()}_COL")).value
         for product in constant.PRODUCT_NAMES
     }
 
     plantProductHours = {
         plantName: {
-            product: inputSheet.cell(
-                constant.INPUT_HOURS_START_ROW + i,
-                getattr(constant, f"INPUT_HOURS_{product.upper()}_COL")
-            ).value
+            product:
+            inputSheet.cell(constant.INPUT_HOURS_START_ROW + i, getattr(constant,
+                                                                        f"INPUT_HOURS_{product.upper()}_COL")).value
             for product in constant.PRODUCT_NAMES
         }
         for i, plantName in enumerate(constant.PLANT_NAMES)
     }
 
     plantAvailableHours = {
-        plantName: inputSheet.cell(
-            constant.INPUT_HOURS_AVAILABLE_START_ROW + i, constant.INPUT_HOURS_AVAILABLE_COL).value
+        plantName: inputSheet.cell(constant.INPUT_HOURS_AVAILABLE_START_ROW + i,
+                                   constant.INPUT_HOURS_AVAILABLE_COL).value
         for i, plantName in enumerate(constant.PLANT_NAMES)
     }
 

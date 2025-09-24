@@ -43,7 +43,7 @@ def formulateModel(productProfits, plantProductHours, plantAvailableHours) -> gr
         batchProductionDecisions[product] = model.addVar(lb=0.0,
                                                          ub=grb.GRB.INFINITY,
                                                          vtype=grb.GRB.CONTINUOUS,
-                                                         name=f'{constant.MODEL_VAR_NAME_PREFIX}{product}')
+                                                         name=f"{product}")
 
     # Define the objective function.
     objExpr = grb.LinExpr()
@@ -58,7 +58,7 @@ def formulateModel(productProfits, plantProductHours, plantAvailableHours) -> gr
         for product, hour in plantProductHours[plant].items():
             lhsExpr += hour * batchProductionDecisions[product]
 
-        model.addConstr(lhsExpr <= availableHour, f"{constant.MODEL_CONSTR_NAME_PREFIX}{plant}")
+        model.addConstr(lhsExpr <= availableHour, f"{plant}")
 
     # Return the model.
     return model
@@ -93,9 +93,9 @@ def solveModel(model) -> tuple[dict, float]:
     # Print the optimal solutions and objective function value.
     print("\nThe optimal solutions:")
     for varName, varValue in soln.items():
-        print(f"{varName}: {varValue}")
+        print(f"    {varName}: {varValue}")
 
-    print(f"The optimal objective function value is: {objVal}")
+    print(f"The optimal objective function value: {objVal}\n")
 
     return soln, objVal
 
@@ -143,7 +143,7 @@ def getOptimalDualVariableValues(model, constrNames=None) -> dict[str, float]:
         constr = model.getConstrByName(constrName)
         if constr is not None:
             duals[constrName] = constr.pi
-            print(f"{constrName}: Optimal dual variable value = {constr.pi}")
+            print(f"Constr {constrName}: Optimal dual variable value = {constr.pi}")
         else:
             duals[constrName] = None
             print(f"{constrName}: Not found")
