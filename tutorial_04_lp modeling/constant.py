@@ -22,9 +22,8 @@ OUTPUT_DOORS_COL = 2
 OUTPUT_WINDOWS_COL = 3
 OUTPUT_PROFIT_COL = 6
 
-# Product names
-DOORS = 'Doors'
-WINDOWS = 'Windows'
+# Product names list
+PRODUCT_NAMES = ['Doors', 'Windows'] 
 
 # Data labels
 PROFIT_PER_BATCH = 'Profit per batch'
@@ -38,10 +37,10 @@ PLANT_NAMES = ['Plant 1', 'Plant 2', 'Plant 3']
 #
 
 # Model name
-MODEL_NAME = "Wyndor"
+MODEL_NAME = 'Wyndor'
 
 # Decision variable name prefix
-MODEL_VAR_NAME_PREFIX = "Var_BatchProduced_"
+MODEL_VAR_NAME_PREFIX = 'Var_BatchProduced_'
 
 # Constraint name prefix
-MODEL_CONSTR_NAME_PREFIX = "Constr_AvailableHours_"
+MODEL_CONSTR_NAME_PREFIX = 'Constr_AvailableHours_'
