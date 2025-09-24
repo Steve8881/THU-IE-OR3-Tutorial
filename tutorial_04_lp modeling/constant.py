@@ -6,18 +6,18 @@ Constants definition module
 DATA_PATH = 'wyndor.xlsx'
 SHEET_NAME = 'Data'
 
-# 1. Profit per batch data location (Doors & Windows)
+# Profit per batch data location (Doors & Windows)
 INPUT_PROFIT_ROW = 4
 INPUT_DOORS_PROFIT_COL = 2
 INPUT_WINDOWS_PROFIT_COL = 3
 
-# 2. Hours used per batch produced data location (3 plants)
+# Hours used per batch produced data location (3 plants)
 INPUT_HOURS_START_ROW = 7
 INPUT_HOURS_END_ROW = 9
 INPUT_DOORS_HOURS_COL = 2
 INPUT_WINDOWS_HOURS_COL = 3
 
-# 3. Hours available data location (3 plants)
+# Hours available data location (3 plants)
 INPUT_HOURS_AVAILABLE_START_ROW = 7
 INPUT_HOURS_AVAILABLE_END_ROW = 9
 INPUT_HOURS_AVAILABLE_START_COL = 6
