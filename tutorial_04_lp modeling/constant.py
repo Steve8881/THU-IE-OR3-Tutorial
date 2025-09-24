@@ -31,7 +31,6 @@ PRODUCT_NAMES = ["Doors", "Windows"]
 
 # Plant names list
 PLANT_NAMES = ["Plant 1", "Plant 2", "Plant 3"]
-PLANT_NAMES = ["Plant 1", "Plant 2", "Plant 3"]
 
 #
 # Model related constants
@@ -39,12 +38,9 @@ PLANT_NAMES = ["Plant 1", "Plant 2", "Plant 3"]
 
 # Model name
 MODEL_NAME = "Wyndor"
-MODEL_NAME = "Wyndor"
 
 # Decision variable name prefix
 MODEL_VAR_NAME_PREFIX = "Var_BatchProduced_"
-MODEL_VAR_NAME_PREFIX = "Var_BatchProduced_"
 
 # Constraint name prefix
-MODEL_CONSTR_NAME_PREFIX = "Constr_AvailableHours_"
 MODEL_CONSTR_NAME_PREFIX = "Constr_AvailableHours_"
