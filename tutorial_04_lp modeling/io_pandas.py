@@ -1,12 +1,8 @@
-"""
-input and output data from Excel file using pandas.
-"""
-
 import pandas as pd
 import constant
 
 
-def readDataPandas() -> tuple[dict, dict, dict]:
+def readData() -> tuple[dict, dict, dict]:
     """
     Read production planning data from an Excel file using pandas.
 
@@ -22,31 +18,35 @@ def readDataPandas() -> tuple[dict, dict, dict]:
     # Read data from the Excel sheet into a pandas DataFrame.
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    # 1. Read product profits from the inputSheet using a loop.
-    productProfits = {}
-    # We define a helper dictionary to map product names to their column numbers.
-    productColumns = {
-        constant.DOORS: constant.DOORS_COL,
-        constant.WINDOWS: constant.WINDOWS_COL,
+    productProfitCols = {
+        'Doors': constant.INPUT_DOORS_PROFIT_COL,
+        'Windows': constant.INPUT_WINDOWS_PROFIT_COL
     }
-    # Read data from the inputSheet and create dictionaries
-    for productName, colIndex in productColumns.items():
-        profitValue = data.at[constant.PROFIT_ROW - 1, colIndex - 1]
+    productHourCols = {
+        'Doors': constant.INPUT_DOORS_HOURS_COL,
+        'Windows': constant.INPUT_WINDOWS_HOURS_COL
+    }
+
+    productProfits = {}
+    for productName in constant.PRODUCT_NAMES:
+        colIndex = productProfitCols[productName]
+        profitValue = data.at[constant.INPUT_PROFIT_START_ROW - 1, colIndex - 1]
         productProfits[productName] = profitValue
 
     plantAvailableHours = {}
-
     for i, plantName in enumerate(constant.PLANT_NAMES):
-        rowIndex = constant.HOURS_START_ROW - 1 + i
-        colIndex = constant.HOURS_COL - 1
+        rowIndex = constant.INPUT_HOURS_AVAILABLE_START_ROW - 1 + i
+        colIndex = constant.INPUT_HOURS_AVAILABLE_START_COL - 1
         hours = data.at[rowIndex, colIndex]
         plantAvailableHours[plantName] = hours
 
+    # Read hours used per product for each plant.
     plantProductHours = {}
     for i, plantName in enumerate(constant.PLANT_NAMES):
-        rowIndex = constant.HOURS_START_ROW - 1 + i
+        rowIndex = constant.INPUT_HOURS_START_ROW - 1 + i
         hoursPerProduct = {}
-        for productName, colIndex in productColumns.items():
+        for productName in constant.PRODUCT_NAMES:
+            colIndex = productHourCols[productName]
             hours = data.at[rowIndex, colIndex - 1]
             hoursPerProduct[productName] = hours
         plantProductHours[plantName] = hoursPerProduct
@@ -54,30 +54,34 @@ def readDataPandas() -> tuple[dict, dict, dict]:
     return productProfits, plantProductHours, plantAvailableHours
 
 
-def writeDataPandas(productsSolution, totalProfit) -> None:
+def writeData(soln, objVal) -> None:
     """
-    Write the solution back to the Excel file using pandas.
+    Write the solution back to the original Excel sheet using pandas.
 
     Parameters
     ----------
-    productsSolution : dict
-        The optimal solutions.
-    totalProfit : float
+    soln : dict
+        The optimal solutions (key is the full variable name).
+    objVal : float
         The optimal objective function value.
     """
-    # Create a pandas DataFrame from the solution.
-    outputData = pd.DataFrame(
-        {
-            constant.DOORS: [productsSolution.get(constant.DOORS, 0)],
-            constant.WINDOWS: [productsSolution.get(constant.WINDOWS, 0)],
-            "Total Profit": [totalProfit],
-        }
-    )
+    # To modify an existing sheet, we first read the entire sheet.
+    data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    # Write the solution DataFrame to a specific sheet.
-    outputData.to_excel(
-        constant.DATA_PATH,
-        sheet_name=constant.WRITE_SHEET_NAME_PANDAS,
-        index=False,
-    )
+    # Modify the specific cells in the DataFrame with the solution values.
+    # Note: We construct the full variable name to look up the value in the solution dictionary.
+    doorsVarName = f"{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[0]}"
+    windowsVarName = f"{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[1]}"
     
+    data.at[constant.OUTPUT_ROW - 1, constant.OUTPUT_DOORS_COL - 1] = soln.get(doorsVarName, 0)
+    data.at[constant.OUTPUT_ROW - 1, constant.OUTPUT_WINDOWS_COL - 1] = soln.get(windowsVarName, 0)
+    data.at[constant.OUTPUT_ROW - 1, constant.OUTPUT_PROFIT_COL - 1] = objVal
+
+    # Write the entire modified DataFrame back to the same sheet.
+    # We use index=False and header=False to avoid adding extra labels.
+    data.to_excel(
+        constant.DATA_PATH,
+        sheet_name=constant.SHEET_NAME,
+        index=False,
+        header=False
+    )
