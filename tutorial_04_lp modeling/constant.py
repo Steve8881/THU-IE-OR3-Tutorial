@@ -6,15 +6,23 @@ Constants definition module
 DATA_PATH = 'wyndor.xlsx'
 SHEET_NAME = 'Data'
 
-# Profit data location
-PROFIT_ROW = 4
-DOORS_COL = 2
-WINDOWS_COL = 3
+# 1. Profit per batch data location (Doors & Windows)
+INPUT_PROFIT_START_ROW = 4
+INPUT_PROFIT_END_ROW = 4
+INPUT_DOORS_PROFIT_COL = 2
+INPUT_WINDOWS_PROFIT_COL = 3
 
-# Hours requirement data location
-HOURS_START_ROW = 7
-HOURS_END_ROW = 9
-HOURS_COL = 6
+# 2. Hours used per batch produced data location (3 plants)
+INPUT_HOURS_START_ROW = 7
+INPUT_HOURS_END_ROW = 9
+INPUT_DOORS_HOURS_COL = 2
+INPUT_WINDOWS_HOURS_COL = 3
+
+# 3. Hours available data location (3 plants)
+INPUT_HOURS_AVAILABLE_START_ROW = 7
+INPUT_HOURS_AVAILABLE_END_ROW = 9
+INPUT_HOURS_AVAILABLE_START_COL = 6
+INPUT_HOURS_AVAILABLE_END_COL = 6
 
 # Output result location
 OUTPUT_ROW = 12
@@ -25,9 +33,6 @@ OUTPUT_PROFIT_COL = 6
 # Product names list
 PRODUCT_NAMES = ['Doors', 'Windows'] 
 
-# Data labels
-PROFIT_PER_BATCH = 'Profit per batch'
-HOURS_AVAILABLE = 'Hours available'
 
 # Plant names list
 PLANT_NAMES = ['Plant 1', 'Plant 2', 'Plant 3']

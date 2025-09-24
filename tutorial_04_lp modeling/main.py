@@ -3,7 +3,7 @@ Wyndor Production Planning Optimization Main Program
 """
 
 from io_openpyxl import read_data_openpyxl
-from io_pandas import read_data_pandas, print_results
+from io_pandas import read_data, print_results
 from model import formulate_model, solve_model, extract_dual_variables
 
 
@@ -16,7 +16,7 @@ def main():
   # Read data from Excel file
     # Two methods available: read_data_openpyxl() or read_data_pandas()
     # Students can modify this line to try different data reading approaches
-    products_data, products_plants_data, plants_data = read_data_openpyxl()
+    products_data, products_plants_data, plants_data = read_data()
     
     # Build model
     model = formulate_model(products_data, products_plants_data, plants_data)
