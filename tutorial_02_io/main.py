@@ -34,9 +34,9 @@ def main():
     # Step 2: Write the solution to the Excel file
     #
 
-    # An example solution
-    soln = {"Doors": 2, "Windows": 6}
-    objVal = 36000
+    # An arbitrary solution and its objective function value
+    soln = {"Doors": 0, "Windows": 0}
+    objVal = 0
 
     # Option 1) Use openpyxl
     writeDataOpenpyxl(soln, objVal)

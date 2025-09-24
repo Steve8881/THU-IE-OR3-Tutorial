@@ -1,5 +1,5 @@
 """
-Constants definition module
+Constants
 """
 
 # Data file path and worksheet name
