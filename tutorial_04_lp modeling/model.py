@@ -67,7 +67,7 @@ def formulateModel(productProfits, plantProductHours,
     return model
 
 
-def solveModel(model) -> dict:
+def solveModel(model) -> tuple[dict, float]:
     """
     Optimize the given Gurobi model.
 
@@ -82,6 +82,8 @@ def solveModel(model) -> dict:
         The optimal solutions
         - Keys: variable names
         - Values: optimal decision variable values
+    objVal : float
+        The optimal objective function value
     """
     model.optimize()
 
@@ -98,7 +100,7 @@ def solveModel(model) -> dict:
 
     print(f'The optimal objective function value is: {objVal}')
 
-    return soln
+    return soln, objVal
 
 
 def getOptimalDualVariableValues(model, constrNames=None) -> dict[str, float]:
