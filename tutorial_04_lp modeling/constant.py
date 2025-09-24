@@ -8,7 +8,7 @@ SHEET_NAME = 'Data'
 
 # Profit per batch data location (Doors & Windows)
 INPUT_PROFIT_ROW = 4
-INPUT_PROFIT_DOORs_COL = 2
+INPUT_PROFIT_DOORS_COL = 2
 INPUT_PROFIT_WINDOWS_COL = 3
 
 # Hours used per batch produced data location (3 plants)
@@ -20,8 +20,8 @@ INPUT_HOURS_WINDOWS_COL = 3
 # Hours available data location (3 plants)
 INPUT_HOURS_AVAILABLE_START_ROW = 7
 INPUT_HOURS_AVAILABLE_END_ROW = 9
-INPUT_HOURS_AVAILABLE_START_COL = 6
-INPUT_HOURS_AVAILABLE_END_COL = 6
+INPUT_HOURS_AVAILABLE_COL = 6
+
 
 # Output result location
 OUTPUT_ROW = 12
