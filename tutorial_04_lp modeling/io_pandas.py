@@ -19,29 +19,22 @@ def readDataPandas() -> tuple[dict, dict, dict]:
     plantAvailableHours : dict
         The available hours at each plant.
     """
-
+    
+    # Read data from the inputSheet
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    productProfitCols = {
-        'Doors': constant.INPUT_PROFIT_DOORS_COL,
-        'Windows': constant.INPUT_PROFIT_WINDOWS_COL
-    }
-    productHourCols = {
-        'Doors': constant.INPUT_HOURS_DOORS_COL,
-        'Windows': constant.INPUT_HOURS_WINDOWS_COL
-    }
-
+    # Create dictionaries
     productProfits = {}
     for productName in constant.PRODUCT_NAMES:
-        colIndex = productProfitCols[productName]
-        profitValue = data.at[constant.INPUT_PROFIT_ROW - 1, colIndex - 1]
+        profitColConst = getattr(constant, f"INPUT_PROFIT_{productName.upper()}_COL")
+        profitValue = data.iloc[constant.INPUT_PROFIT_ROW - 1, profitColConst - 1]
         productProfits[productName] = profitValue
 
     plantAvailableHours = {}
     for i, plantName in enumerate(constant.PLANT_NAMES):
         rowIndex = constant.INPUT_HOURS_AVAILABLE_START_ROW - 1 + i
         colIndex = constant.INPUT_HOURS_AVAILABLE_COL - 1
-        hours = data.at[rowIndex, colIndex]
+        hours = data.iloc[rowIndex, colIndex]
         plantAvailableHours[plantName] = hours
 
     plantProductHours = {}
@@ -49,8 +42,8 @@ def readDataPandas() -> tuple[dict, dict, dict]:
         rowIndex = constant.INPUT_HOURS_START_ROW - 1 + i
         hoursPerProduct = {}
         for productName in constant.PRODUCT_NAMES:
-            colIndex = productHourCols[productName]
-            hours = data.at[rowIndex, colIndex - 1]
+            hourColConst = getattr(constant, f"INPUT_HOURS_{productName.upper()}_COL")
+            hours = data.iloc[rowIndex, hourColConst - 1]
             hoursPerProduct[productName] = hours
         plantProductHours[plantName] = hoursPerProduct
 
@@ -68,16 +61,18 @@ def writeDataPandas(soln, objVal) -> None:
     objVal : float
         The optimal objective function value.
     """
+    # Read data from the inputSheet
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    doorsVarName = f'{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[0]}'
-    windowsVarName = f'{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[1]}'
+    # Build the outputValues dictionary
+    outputValues = {}
+    for product in constant.PRODUCT_NAMES:
+        varName = f'{constant.MODEL_VAR_NAME_PREFIX}{product}'
+        outputColConst = getattr(constant, f"OUTPUT_{product.upper()}_COL")
+        outputValues[outputColConst] = soln.get(varName, 0)
 
-    outputValues = {
-        constant.OUTPUT_DOORS_COL: soln.get(doorsVarName, 0),
-        constant.OUTPUT_WINDOWS_COL: soln.get(windowsVarName, 0),
-        constant.OUTPUT_PROFIT_COL: objVal
-    }
+    # Add the total profit to the dictionary.
+    outputValues[constant.OUTPUT_PROFIT_COL] = objVal
 
     rowIndex = constant.OUTPUT_ROW - 1
 
