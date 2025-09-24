@@ -5,8 +5,7 @@ Wyndor Production Planning Optimization Main Program
 from io_openpyxl import readDataOpenpyxl, writeDataOpenpyxl
 from io_pandas import readDataPandas, writeDataPandas
 from model import formulateModel, solveModel, getOptimalDualVariableValues
-import constant
-
+DATA_PATH = 'wyndor.xlsx'
 def main():
     """
     Main function: Execute linear programming solution process
