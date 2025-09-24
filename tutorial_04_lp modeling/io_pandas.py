@@ -19,7 +19,7 @@ def readDataPandas() -> tuple[dict, dict, dict]:
     plantAvailableHours : dict
         The available hours at each plant.
     """
-    
+
     # Read data from the inputSheet
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
@@ -67,9 +67,8 @@ def writeDataPandas(soln, objVal) -> None:
     # Build the outputValues dictionary
     outputValues = {}
     for product in constant.PRODUCT_NAMES:
-        varName = f'{constant.MODEL_VAR_NAME_PREFIX}{product}'
         outputColConst = getattr(constant, f"OUTPUT_{product.upper()}_COL")
-        outputValues[outputColConst] = soln.get(varName, 0)
+        outputValues[outputColConst] = soln.get(product, 0)
 
     # Add the total profit to the dictionary.
     outputValues[constant.OUTPUT_PROFIT_COL] = objVal

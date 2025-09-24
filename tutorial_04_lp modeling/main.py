@@ -17,7 +17,7 @@ def main():
     # Two methods available: from io_openpyxl import readDataOpenpyxl OR from io_pandas import readDataPandas
     # You can modify the "from ··· import ··" line to try different data reading methods
     productsData, productsPlantsData, plantsData = readDataOpenpyxl()
-
+    # productsData, productsPlantsData, plantsData = readDataPandas()
     # Build model
     model = formulateModel(productsData, productsPlantsData, plantsData)
 
@@ -29,6 +29,7 @@ def main():
 
     # Write results back to Excel
     writeDataOpenpyxl(solutionResults, objValue)
+    # writeDataPandas(solutionResults, objValue)
 
 
 if __name__ == "__main__":
