@@ -38,14 +38,14 @@ def readDataOpenpyxl() -> tuple[dict, dict, dict]:
     # Read data from the inputSheet and create dictionaries
     productProfits = {}
     for productName in constant.PRODUCT_NAMES:
-        profitColConst = getattr(constant, f"INPUT_PROFIT_{productName.upper()}_COL")
-        profitValue = inputSheet.cell(constant.INPUT_PROFIT_ROW, profitColConst).value
+        colIndex = constant.INPUT_PROFIT_START_COL + constant.PRODUCT_NAMES.index(productName)
+        profitValue = inputSheet.cell(constant.INPUT_PROFIT_START_ROW, colIndex).value
         productProfits[productName] = profitValue
 
     plantAvailableHours = {}
     for i, plantName in enumerate(constant.PLANT_NAMES):
         rowIndex = constant.INPUT_HOURS_AVAILABLE_START_ROW + i
-        colIndex = constant.INPUT_HOURS_AVAILABLE_COL
+        colIndex = constant.INPUT_HOURS_AVAILABLE_START_COL
         hours = inputSheet.cell(rowIndex, colIndex).value
         plantAvailableHours[plantName] = hours
 
@@ -54,8 +54,8 @@ def readDataOpenpyxl() -> tuple[dict, dict, dict]:
         rowIndex = constant.INPUT_HOURS_START_ROW + i
         hoursPerProduct = {}
         for productName in constant.PRODUCT_NAMES:
-            hourColConst = getattr(constant, f"INPUT_HOURS_{productName.upper()}_COL")
-            hours = inputSheet.cell(rowIndex, hourColConst).value
+            colIndex = constant.INPUT_HOURS_START_COL + constant.PRODUCT_NAMES.index(productName)
+            hours = inputSheet.cell(rowIndex, colIndex).value
             hoursPerProduct[productName] = hours
         plantProductHours[plantName] = hoursPerProduct
 
@@ -82,10 +82,14 @@ def writeDataOpenpyxl(soln, objVal) -> None:
     outputSheet = outputBook[constant.SHEET_NAME]
 
     # Write the optimal solutions to the outputSheet
-    for product in constant.PRODUCT_NAMES:
-        outputCol = getattr(constant, f"OUTPUT_{product.upper()}_COL")
-        outputSheet.cell(constant.OUTPUT_ROW, outputCol, soln[product])
-    outputSheet.cell(constant.OUTPUT_ROW, constant.OUTPUT_PROFIT_COL, objVal)
+    for j, product in enumerate(constant.PRODUCT_NAMES):
+        rowIndex = constant.OUTPUT_BATCHES_PRODUCED_START_ROW
+        colIndex = constant.OUTPUT_BATCHES_PRODUCED_START_COL + j
+        outputSheet.cell(rowIndex, colIndex, soln[product])
+
+    outputSheet.cell(constant.OUTPUT_PROFIT_START_ROW, constant.OUTPUT_PROFIT_START_COL, objVal)
 
     # Save the workbook
     outputBook.save(constant.DATA_PATH)
+
+print(readDataOpenpyxl())
