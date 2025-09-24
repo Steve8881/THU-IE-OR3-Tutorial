@@ -2,8 +2,8 @@
 Wyndor Production Planning Optimization Main Program
 """
 
-from io_openpyxl import read_data_openpyxl
-from io_pandas import read_data, print_results
+from io_openpyxl import readDataOpenpyxl,
+from io_pandas import readDataPandas, print_results
 from model import formulate_model, solve_model, extract_dual_variables
 
 
