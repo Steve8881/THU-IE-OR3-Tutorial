@@ -1,82 +1,87 @@
+
+# io_pandas.py
+
 import pandas as pd
-from constant import DOORS, WINDOWS, PLANT_NAMES
+import constant
 
 
-def print_results(solution_results, dual_variables, products_data, plants_data):
+# Reads the production planning data from the Excel file.
+def readData():
     """
-    Print solution results and dual variables
-    Using pandas for data processing and formatted output
-    
-    Args:
-        solution_results: Solution results dictionary
-        dual_variables: Dual variables dictionary
-        products_data: Product data (dict)
-        plants_data: Plant data (dict)
+    tuple of dict or None
+        If successful, returns a tuple of three dictionaries:
+        - product_profit: Profit per batch for each product.
+          e.g., {"Doors": 3000, "Windows": 5000}
+        - plant_product_hour: Hours required by each product at each plant.
+          e.g., {"Plant 1": {"Doors": 1, "Windows": 0}, "Plant 2": {"Doors": 0, "Windows": 2},"Plant 3": {"Doors": 3, "Windows": 2}}
+        - plant_available_hour: Total hours available at each plant.
+          e.g., {"Plant 1": 4, "Plant 2": 12, "Plant 2": 18}
+        If the file is not found or an error occurs, returns (None, None, None).
     """
-    # Convert dictionary data to pandas DataFrame for processing
-    products_df = pd.DataFrame([products_data])
-    plants_df = pd.DataFrame.from_dict(plants_data, orient='index', columns=['Available Hours'])
-    
-    # Print optimal solution
-    print("\n【Optimal Solution】")
-    print(f"Doors production quantity: {solution_results[DOORS]:.2f}")
-    print(f"Windows production quantity: {solution_results[WINDOWS]:.2f}")
-    print(f"Maximum profit: ${solution_results['objective_value']:.2f}")
-    
-    # Use pandas to format product information output
-    print("\n【Product Profit Information】")
-    print(products_df.to_string(index=False))
-    
-    # Use pandas to format plant information output
-    print("\n【Plant Resource Information】")
-    print(plants_df.to_string())
-    
-    # Print dual variables (shadow prices)
-    print("\n【Dual Variables (Shadow Prices)】")
-    for i, plant_name in enumerate(PLANT_NAMES):
-        dual_value = dual_variables.get(f'plant_{i+1}', 0)
-        print(f"{plant_name}: ${dual_value:.2f}")
+    # Read the entire Excel sheet into a pandas DataFrame.
+    # header=None ensures that the first row is not treated as a header.
+    data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-
-def read_data_pandas():
-    """
-    Read production planning data from Excel file using pandas
-    
-    Returns:
-        tuple: Tuple containing three dictionaries
-            - products_profits: Product profit data (dict)
-            - products_plants_hours: Product hours requirement data for each plant (dict)
-            - plants_available_hours: Available hours data for each plant (dict)
-    """
-    from constant import (
-        DATA_PATH, SHEET_NAME,
-        PROFIT_ROW, DOORS_COL, WINDOWS_COL,
-        HOURS_START_ROW, HOURS_END_ROW, HOURS_COL,
-        DOORS, WINDOWS, PLANT_NAMES
-    )
-    
-    # Read Excel file using pandas
-    df = pd.read_excel(DATA_PATH, sheet_name=SHEET_NAME, header=None)
-    
-    # Read product profit data
-    products_profits = {
-        DOORS: df.iloc[PROFIT_ROW-1, DOORS_COL-1],
-        WINDOWS: df.iloc[PROFIT_ROW-1, WINDOWS_COL-1]
+    # 1. Extract product profits directly from specific cells.
+    product_profit = {
+        constant.DOORS: data.at[constant.PROFIT_ROW - 1, constant.DOORS_COL - 1],
+        constant.WINDOWS: data.at[constant.PROFIT_ROW - 1, constant.WINDOWS_COL - 1],
     }
-    
-    # Read product hours requirement data for each plant
-    products_plants_hours = {}
-    for i, plant_name in enumerate(PLANT_NAMES):
-        row = HOURS_START_ROW - 1 + i
-        products_plants_hours[plant_name] = {
-            DOORS: df.iloc[row, DOORS_COL-1],
-            WINDOWS: df.iloc[row, WINDOWS_COL-1]
+
+    # 2. Use a dictionary comprehension to get the available hours for each plant.
+    # This is a concise way to create a dictionary from a loop.
+    plant_available_hour = {
+        plant_name: data.at[constant.HOURS_START_ROW - 1 + i, constant.HOURS_COL - 1]
+        for i, plant_name in enumerate(constant.PLANT_NAMES)
+    }
+
+    # 3. Use a nested dictionary comprehension for the plant and product hours.
+    plant_product_hour = {
+        plant_name: {
+            constant.DOORS: data.at[constant.HOURS_START_ROW - 1 + i, constant.DOORS_COL - 1],
+            constant.WINDOWS: data.at[constant.HOURS_START_ROW - 1 + i, constant.WINDOWS_COL - 1],
         }
-    
-    # Read available hours data for each plant
-    plants_available_hours = {}
-    for i, plant_name in enumerate(PLANT_NAMES):
-        row = HOURS_START_ROW - 1 + i
-        plants_available_hours[plant_name] = df.iloc[row, HOURS_COL-1]
-    
-    return products_profits, products_plants_hours, plants_available_hours
+        for i, plant_name in enumerate(constant.PLANT_NAMES)
+    }
+
+    print("Data read successfully using pandas.")
+    return product_profit, plant_product_hour, plant_available_hour
+
+
+# Writes the optimal solution to a new sheet in the Excel file.
+def writeData(products_solution, total_profit):
+    """
+    Args:
+        products_solution (dict): The optimal amount for each product.
+        total_profit (float): The final optimal total profit.
+    """
+    # Create a pandas DataFrame from the solution. This is the standard way
+    # to prepare tabular data for writing with pandas.
+    output_data = pd.DataFrame(
+        {
+            constant.DOORS: [products_solution.get(constant.DOORS, 0)],
+            constant.WINDOWS: [products_solution.get(constant.WINDOWS, 0)],
+            "Total Profit": [total_profit],
+        }
+    )
+
+    # Use pd.ExcelWriter to add or replace a sheet without affecting others.
+    # This is the standard and safest way to write with pandas.
+    with pd.ExcelWriter(
+        constant.DATA_PATH,
+        engine="openpyxl",
+        mode="a",
+        if_sheet_exists="replace",
+    ) as writer:
+        output_data.to_excel(
+            writer, sheet_name=constant.WRITE_SHEET_NAME_PANDAS, index=False
+        )
+
+    print(
+        f"Solution successfully written to sheet '{constant.WRITE_SHEET_NAME_PANDAS}' "
+        f"in '{constant.DATA_PATH}'."
+    )
+
+
+
+
