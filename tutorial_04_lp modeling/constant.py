@@ -21,7 +21,8 @@ INPUT_WINDOWS_HOURS_COL = 3
 # 3. Hours available data location (3 plants)
 INPUT_HOURS_AVAILABLE_START_ROW = 7
 INPUT_HOURS_AVAILABLE_END_ROW = 9
-INPUT_HOURS_AVAILABLE_COL = 6
+INPUT_HOURS_AVAILABLE_START_COL = 6
+INPUT_HOURS_AVAILABLE_END_COL = 6
 
 # Output result location
 OUTPUT_ROW = 12
@@ -32,9 +33,6 @@ OUTPUT_PROFIT_COL = 6
 # Product names list
 PRODUCT_NAMES = ['Doors', 'Windows'] 
 
-# Data labels
-PROFIT_PER_BATCH = 'Profit per batch'
-HOURS_AVAILABLE = 'Hours available'
 
 # Plant names list
 PLANT_NAMES = ['Plant 1', 'Plant 2', 'Plant 3']
