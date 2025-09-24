@@ -13,22 +13,24 @@ def main():
     """
     print("Wyndor Production Planning Optimization")
 
-    # Read data from Excel file
-    # Two methods available: from io_openpyxl import readDataOpenpyxl OR from io_pandas import readDataPandas
-    # You can modify the "from ··· import ··" line to try different data reading methods
-    productsData, productsPlantsData, plantsData = readDataOpenpyxl()
-    # productsData, productsPlantsData, plantsData = readDataPandas()
+    # Read data
+    # Two methods available: readDataOpenpyxl() and readDataPandas()
+    productProfits, plantProductHours, plantAvailableHours = readDataOpenpyxl()
+    # productProfits, plantProductHours, plantAvailableHours = readDataPandas()
+
     # Build model
-    model = formulateModel(productsData, productsPlantsData, plantsData)
+    model = formulateModel(productProfits, plantProductHours, plantAvailableHours)
 
     # Solve model
-    soln, objValue = solveModel(model)
+    soln, objVal = solveModel(model)
 
-    # Extract dual variables if use this code
+    # Extract dual variables
     # dualVariables = getOptimalDualVariableValues(model)
 
     # Write results back to Excel
-    writeDataOpenpyxl(soln, objValue)
+    # Two methods available: writeDataOpenpyxl() and writeDataPandas()
+    writeDataOpenpyxl(soln, objVal)
+    # writeDataPandas(soln, objVal)
 
 
 if __name__ == "__main__":
