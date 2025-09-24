@@ -91,5 +91,3 @@ def writeDataOpenpyxl(soln, objVal) -> None:
 
     # Save the workbook
     outputBook.save(constant.DATA_PATH)
-
-print(readDataOpenpyxl())
