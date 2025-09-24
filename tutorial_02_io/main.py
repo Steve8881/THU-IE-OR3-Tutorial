@@ -21,6 +21,12 @@ def main():
     # Option 2) Use pandas
     # productProfits, plantProductHours, plantAvailableHours = readDataPandas()
 
+    print('productProfits:', productProfits)
+
+    print('plantProductHours:', plantProductHours)
+
+    print('plantAvailableHours:', plantAvailableHours)
+
     #
     # Step 2: Write the solution to the Excel file
     #
