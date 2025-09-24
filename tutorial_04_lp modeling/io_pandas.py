@@ -4,10 +4,9 @@ input and output data from Excel file using pandas.
 
 import pandas as pd
 import constant
-from typing import Tuple
 
 
-def readDataPandas() -> Tuple[dict, dict, dict]:
+def readDataPandas() -> tuple[dict, dict, dict]:
     """
     Read production planning data from an Excel file using pandas.
 
