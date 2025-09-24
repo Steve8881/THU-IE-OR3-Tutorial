@@ -1,90 +1,95 @@
-
-# io_pandas.py
-
-
 import pandas as pd
 import constant
 
 
-def readData():
+def readData() -> tuple[dict, dict, dict]:
     """
-    Given an Excel file, read production planning data from Excel file using pandas.
+    Read production planning data from an Excel file using pandas.
 
     Returns
     -------
     productProfits : dict
-        The profit per batch for each product
-        - Keys: product names (`Doors`, `Windows`)
-        - Values: profit per batch
+        The profit per batch for each product.
     plantProductHours : nested dict
-        The hours required to produce one batch of each product at each plant
-        - Keys: plant names (`Plant 1`, `Plant 2`, `Plant 3`)
-        - Values: dict
-            - Keys: product names (`Doors` and `Windows`)
-            - Values: hours required
+        The hours required to produce one batch of each product at each plant.
     plantAvailableHours : dict
-        The available hours at each plant
-        - Keys: plant names (`Plant 1`, `Plant 2`, `Plant 3`)
-        - Values: available hours
+        The available hours at each plant.
     """
-    # Read data from the Excel sheet into a pandas DataFrame.
+
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    # Read data from the inputSheet and create dictionaries
-    product_profit = {
-        constant.DOORS: data.at[constant.PROFIT_ROW - 1, constant.DOORS_COL - 1],
-        constant.WINDOWS: data.at[constant.PROFIT_ROW - 1, constant.WINDOWS_COL - 1],
+    productProfitCols = {
+        'Doors': constant.INPUT_DOORS_PROFIT_COL,
+        'Windows': constant.INPUT_WINDOWS_PROFIT_COL
+    }
+    productHourCols = {
+        'Doors': constant.INPUT_DOORS_HOURS_COL,
+        'Windows': constant.INPUT_WINDOWS_HOURS_COL
     }
 
-    plant_product_hour = {
-        plant_name: {
-            constant.DOORS: data.at[constant.HOURS_START_ROW - 1 + i, constant.DOORS_COL - 1],
-            constant.WINDOWS: data.at[constant.HOURS_START_ROW - 1 + i, constant.WINDOWS_COL - 1],
-        }
-        for i, plant_name in enumerate(constant.PLANT_NAMES)
-    }
+    # Read data from the Excel sheet into a pandas DataFrame.
+    productProfits = {}
+    for productName in constant.PRODUCT_NAMES:
+        colIndex = productProfitCols[productName]
+        profitValue = data.at[constant.INPUT_PROFIT_START_ROW - 1, colIndex - 1]
+        productProfits[productName] = profitValue
 
-    plant_available_hour = {
-        plant_name: data.at[constant.HOURS_START_ROW - 1 + i, constant.HOURS_COL - 1]
-        for i, plant_name in enumerate(constant.PLANT_NAMES)
-    }
+    plantAvailableHours = {}
+    for i, plantName in enumerate(constant.PLANT_NAMES):
+        rowIndex = constant.INPUT_HOURS_AVAILABLE_START_ROW - 1 + i
+        colIndex = constant.INPUT_HOURS_AVAILABLE_START_COL - 1
+        hours = data.at[rowIndex, colIndex]
+        plantAvailableHours[plantName] = hours
 
-    return product_profit, plant_product_hour, plant_available_hour
+    plantProductHours = {}
+    for i, plantName in enumerate(constant.PLANT_NAMES):
+        rowIndex = constant.INPUT_HOURS_START_ROW - 1 + i
+        hoursPerProduct = {}
+        for productName in constant.PRODUCT_NAMES:
+            colIndex = productHourCols[productName]
+            hours = data.at[rowIndex, colIndex - 1]
+            hoursPerProduct[productName] = hours
+        plantProductHours[plantName] = hoursPerProduct
+
+    return productProfits, plantProductHours, plantAvailableHours
 
 
-def writeData(products_solution, total_profit):
+def writeData(soln, objVal) -> None:
     """
-    Write the solution back to the Excel file using pandas.
+    Write the solution back to the original Excel sheet using pandas.
 
     Parameters
     ----------
     soln : dict
-        The optimal solutions
-        - Keys: variable names
-        - Values: optimal decision variable values
+        The optimal solutions (key is the full variable name).
     objVal : float
-        The optimal objective function value
+        The optimal objective function value.
     """
-    # Create a pandas DataFrame from the solution.
-    output_data = pd.DataFrame(
-        {
-            constant.DOORS: [products_solution.get(constant.DOORS, 0)],
-            constant.WINDOWS: [products_solution.get(constant.WINDOWS, 0)],
-            "Total Profit": [total_profit],
-        }
-    )
+    # read the entire sheet
+    data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    # Write the solution to the specified sheet.
-    with pd.ExcelWriter(
+    # Note: We construct the full variable name to look up the value in the solution dictionary.
+    doorsVarName = f"{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[0]}"
+    windowsVarName = f"{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[1]}"
+    
+    outputValues = {
+        constant.OUTPUT_DOORS_COL: soln.get(doorsVarName, 0),
+        constant.OUTPUT_WINDOWS_COL: soln.get(windowsVarName, 0),
+        constant.OUTPUT_PROFIT_COL: objVal
+    }
+
+    rowIndex = constant.OUTPUT_ROW - 1
+
+    # Loop through the prepared dictionary and update each cell in the DataFrame.
+    for col_constant, value in outputValues.items():
+        colIndex = col_constant - 1
+        data.loc[rowIndex, colIndex] = value
+
+    # Write DataFrame back to the Excel sheet.
+    data.to_excel(
         constant.DATA_PATH,
-        engine="openpyxl",
-        mode="a",
-        if_sheet_exists="replace",
-    ) as writer:
-        output_data.to_excel(
-            writer, sheet_name=constant.WRITE_SHEET_NAME_PANDAS, index=False
-        )
-
-
-
+        sheet_name=constant.SHEET_NAME,
+        index=False,
+        header=False
+    )
 
