@@ -7,8 +7,7 @@ DATA_PATH = 'wyndor.xlsx'
 SHEET_NAME = 'Data'
 
 # 1. Profit per batch data location (Doors & Windows)
-INPUT_PROFIT_START_ROW = 4
-INPUT_PROFIT_END_ROW = 4
+INPUT_PROFIT_ROW = 4
 INPUT_DOORS_PROFIT_COL = 2
 INPUT_WINDOWS_PROFIT_COL = 3
 
