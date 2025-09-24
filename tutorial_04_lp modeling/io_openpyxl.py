@@ -1,8 +1,13 @@
+"""
+Reading from and writing to an Excel file using openpyxl.
+"""
+
 from openpyxl import load_workbook
+
 import constant
 
 
-def readData():
+def readData() -> tuple[dict, dict, dict]:
     """
     Given an Excel file, read production planning data from Excel file using openpyxl.
     
@@ -34,6 +39,11 @@ def readData():
     productProfits = {constant.DOORS: inputSheet.cell(constant.PROFIT_ROW, constant.DOORS_COL).value,
                       constant.WINDOWS: inputSheet.cell(constant.PROFIT_ROW, constant.WINDOWS_COL).value
                       }
+    
+    productProfits = {
+    product: inputSheet.cell(constant.PROFIT_ROW, getattr(constant, f"{product}_COL")).value
+    for product in constant.PRODUCT_NAMES
+}
 
     plantProductHours = {
         plantName: {
@@ -51,7 +61,7 @@ def readData():
     return productProfits, plantProductHours, plantAvailableHours
 
 
-def writeData(soln, objVal):
+def writeData(soln, objVal) -> None:
     """
     Write the solution back to the Excel file using openpyxl.
 
