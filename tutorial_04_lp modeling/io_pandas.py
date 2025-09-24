@@ -20,30 +20,31 @@ def readDataPandas() -> tuple[dict, dict, dict]:
         The available hours at each plant.
     """
 
-    # Read data from the inputSheet
+    # Read data from the inputSheet.
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    # Create dictionaries
+    # Create dictionaries based on start coordinates and list lengths.
     productProfits = {}
-    for productName in constant.PRODUCT_NAMES:
-        profitColConst = getattr(constant, f"INPUT_PROFIT_{productName.upper()}_COL")
-        profitValue = data.iloc[constant.INPUT_PROFIT_ROW - 1, profitColConst - 1]
+    startRow = constant.INPUT_PROFIT_START_ROW - 1
+    startCol = constant.INPUT_PROFIT_START_COL - 1
+    for j, productName in enumerate(constant.PRODUCT_NAMES):
+        profitValue = data.iloc[startRow, startCol + j]
         productProfits[productName] = profitValue
 
     plantAvailableHours = {}
+    startRow = constant.INPUT_HOURS_AVAILABLE_START_ROW - 1
+    startCol = constant.INPUT_HOURS_AVAILABLE_START_COL - 1
     for i, plantName in enumerate(constant.PLANT_NAMES):
-        rowIndex = constant.INPUT_HOURS_AVAILABLE_START_ROW - 1 + i
-        colIndex = constant.INPUT_HOURS_AVAILABLE_COL - 1
-        hours = data.iloc[rowIndex, colIndex]
+        hours = data.iloc[startRow + i, startCol]
         plantAvailableHours[plantName] = hours
 
     plantProductHours = {}
+    startRow = constant.INPUT_HOURS_START_ROW - 1
+    startCol = constant.INPUT_HOURS_START_COL - 1
     for i, plantName in enumerate(constant.PLANT_NAMES):
-        rowIndex = constant.INPUT_HOURS_START_ROW - 1 + i
         hoursPerProduct = {}
-        for productName in constant.PRODUCT_NAMES:
-            hourColConst = getattr(constant, f"INPUT_HOURS_{productName.upper()}_COL")
-            hours = data.iloc[rowIndex, hourColConst - 1]
+        for j, productName in enumerate(constant.PRODUCT_NAMES):
+            hours = data.iloc[startRow + i, startCol + j]
             hoursPerProduct[productName] = hours
         plantProductHours[plantName] = hoursPerProduct
 
@@ -61,22 +62,21 @@ def writeDataPandas(soln, objVal) -> None:
     objVal : float
         The optimal objective function value.
     """
-    # Read data from the inputSheet
+    # Read data from the inputSheet.
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    # Build the outputValues dictionary
-    outputValues = {}
-    for product in constant.PRODUCT_NAMES:
-        outputColConst = getattr(constant, f"OUTPUT_{product.upper()}_COL")
-        outputValues[outputColConst] = soln.get(product, 0)
+    # Write the batches produced solutions.
+    startRow = constant.OUTPUT_BATCHES_PRODUCED_START_ROW - 1
+    startCol = constant.OUTPUT_BATCHES_PRODUCED_START_COL - 1
+    for j, product in enumerate(constant.PRODUCT_NAMES):
+        varName = f'{constant.MODEL_VAR_NAME_PREFIX}{product}'
+        value = soln.get(varName, 0)
+        data.loc[startRow, startCol + j] = value
 
-    # Add the total profit to the dictionary.
-    outputValues[constant.OUTPUT_PROFIT_COL] = objVal
+    # Write the total profit solution.
+    profitRow = constant.OUTPUT_PROFIT_START_ROW - 1
+    profitCol = constant.OUTPUT_PROFIT_START_COL - 1
+    data.loc[profitRow, profitCol] = objVal
 
-    rowIndex = constant.OUTPUT_ROW - 1
-
-    for col_constant, value in outputValues.items():
-        colIndex = col_constant - 1
-        data.loc[rowIndex, colIndex] = value
-
+    # Save to Excel file.
     data.to_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, index=False, header=False)
