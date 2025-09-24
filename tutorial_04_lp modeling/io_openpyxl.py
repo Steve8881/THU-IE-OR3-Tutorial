@@ -7,10 +7,10 @@ from openpyxl import load_workbook
 import constant
 
 
-def readData() -> tuple[dict, dict, dict]:
+def readDataOpenpyxl() -> tuple[dict, dict, dict]:
     """
     Given an Excel file, read production planning data from Excel file using openpyxl.
-    
+
     Returns
     -------
     productProfits : dict
@@ -37,32 +37,32 @@ def readData() -> tuple[dict, dict, dict]:
 
     # Read data from the inputSheet and create dictionaries
     productProfits = {
-        constant.DOORS: inputSheet.cell(constant.PROFIT_ROW, constant.DOORS_COL).value,
-        constant.WINDOWS: inputSheet.cell(constant.PROFIT_ROW, constant.WINDOWS_COL).value
-    }
-
-    productProfits = {
-        product: inputSheet.cell(constant.PROFIT_ROW, getattr(constant, f"{product}_COL")).value
+        product: inputSheet.cell(constant.INPUT_PROFIT_ROW, getattr(
+            constant, f"INPUT_PROFIT_{product.upper()}_COL")).value
         for product in constant.PRODUCT_NAMES
     }
 
     plantProductHours = {
         plantName: {
-            constant.DOORS: inputSheet.cell(constant.HOURS_START_ROW + i, constant.DOORS_COL).value,
-            constant.WINDOWS: inputSheet.cell(constant.HOURS_START_ROW + i, constant.WINDOWS_COL).value
+            product: inputSheet.cell(
+                constant.INPUT_HOURS_START_ROW + i,
+                getattr(constant, f"INPUT_HOURS_{product.upper()}_COL")
+            ).value
+            for product in constant.PRODUCT_NAMES
         }
         for i, plantName in enumerate(constant.PLANT_NAMES)
     }
 
     plantAvailableHours = {
-        plantName: inputSheet.cell(constant.HOURS_START_ROW + i, constant.HOURS_COL).value
+        plantName: inputSheet.cell(
+            constant.INPUT_HOURS_AVAILABLE_START_ROW + i, constant.INPUT_HOURS_AVAILABLE_COL).value
         for i, plantName in enumerate(constant.PLANT_NAMES)
     }
 
     return productProfits, plantProductHours, plantAvailableHours
 
 
-def writeData(soln, objVal) -> None:
+def writeDataOpenpyxl(soln, objVal) -> None:
     """
     Write the solution back to the Excel file using openpyxl.
 
@@ -82,8 +82,9 @@ def writeData(soln, objVal) -> None:
     outputSheet = outputBook[constant.SHEET_NAME]
 
     # Write the optimal solutions to the outputSheet
-    outputSheet.cell(constant.OUTPUT_ROW, constant.OUTPUT_DOORS_COL, soln[constant.DOORS])
-    outputSheet.cell(constant.OUTPUT_ROW, constant.OUTPUT_WINDOWS_COL, soln[constant.WINDOWS])
+    for product in constant.PRODUCT_NAMES:
+        outputCol = getattr(constant, f"OUTPUT_{product.upper()}_COL")
+        outputSheet.cell(constant.OUTPUT_ROW, outputCol, soln[product])
     outputSheet.cell(constant.OUTPUT_ROW, constant.OUTPUT_PROFIT_COL, objVal)
 
     # Save the workbook
