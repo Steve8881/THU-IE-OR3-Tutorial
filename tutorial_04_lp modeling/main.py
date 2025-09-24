@@ -12,25 +12,11 @@ def main():
     Main function: Execute linear programming solution process
     """
     print("Wyndor Production Planning Optimization")
-    print("="*40)
     
-    # Let students choose data reading method
-    print("\nChoose data reading method:")
-    print("1. OpenPyXL (direct Excel access)")
-    print("2. Pandas (DataFrame-based)")
-    
-    while True:
-        choice = input("Enter your choice (1 or 2): ").strip()
-        if choice == "1":
-            print("Using OpenPyXL to read data...")
-            products_data, products_plants_data, plants_data = read_data_openpyxl()
-            break
-        elif choice == "2":
-            print("Using Pandas to read data...")
-            products_data, products_plants_data, plants_data = read_data_pandas()
-            break
-        else:
-            print("Invalid choice. Please enter 1 or 2.")
+  # Read data from Excel file
+    # Two methods available: read_data_openpyxl() or read_data_pandas()
+    # Students can modify this line to try different data reading approaches
+    products_data, products_plants_data, plants_data = read_data_openpyxl()
     
     # Build model
     model = formulate_model(products_data, products_plants_data, plants_data)
