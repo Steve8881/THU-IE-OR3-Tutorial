@@ -15,17 +15,17 @@ def readDataOpenpyxl() -> tuple[dict, dict, dict]:
     -------
     productProfits : dict
         The profit per batch for each product
-        - Keys: product names (`Doors`, `Windows`)
+        - Keys: product names ("Doors", "Windows")
         - Values: profit per batch
     plantProductHours : nested dict
         The hours required to produce one batch of each product at each plant
-        - Keys: plant names (`Plant 1`, `Plant 2`, `Plant 3`)
+        - Keys: plant names ("Plant 1", "Plant 2", "Plant 3")
         - Values: dict
-            - Keys: product names (`Doors` and `Windows`)
+            - Keys: product names ("Doors" and "Windows")
             - Values: hours required
     plantAvailableHours : dict
         The available hours at each plant
-        - Keys: plant names (`Plant 1`, `Plant 2`, `Plant 3`)
+        - Keys: plant names ("Plant 1", "Plant 2", "Plant 3")
         - Values: available hours
     """
 
