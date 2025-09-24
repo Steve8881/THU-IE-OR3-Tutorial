@@ -15,7 +15,7 @@ def readData() -> tuple[dict, dict, dict]:
     plantAvailableHours : dict
         The available hours at each plant.
     """
-    # Read data from the Excel sheet into a pandas DataFrame.
+
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
     productProfitCols = {
@@ -27,6 +27,7 @@ def readData() -> tuple[dict, dict, dict]:
         'Windows': constant.INPUT_WINDOWS_HOURS_COL
     }
 
+    # Read data from the Excel sheet into a pandas DataFrame.
     productProfits = {}
     for productName in constant.PRODUCT_NAMES:
         colIndex = productProfitCols[productName]
@@ -40,7 +41,6 @@ def readData() -> tuple[dict, dict, dict]:
         hours = data.at[rowIndex, colIndex]
         plantAvailableHours[plantName] = hours
 
-    # Read hours used per product for each plant.
     plantProductHours = {}
     for i, plantName in enumerate(constant.PLANT_NAMES):
         rowIndex = constant.INPUT_HOURS_START_ROW - 1 + i
@@ -65,23 +65,31 @@ def writeData(soln, objVal) -> None:
     objVal : float
         The optimal objective function value.
     """
-    # To modify an existing sheet, we first read the entire sheet.
+    # read the entire sheet
     data = pd.read_excel(constant.DATA_PATH, sheet_name=constant.SHEET_NAME, header=None)
 
-    # Modify the specific cells in the DataFrame with the solution values.
     # Note: We construct the full variable name to look up the value in the solution dictionary.
     doorsVarName = f"{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[0]}"
     windowsVarName = f"{constant.MODEL_VAR_NAME_PREFIX}{constant.PRODUCT_NAMES[1]}"
     
-    data.at[constant.OUTPUT_ROW - 1, constant.OUTPUT_DOORS_COL - 1] = soln.get(doorsVarName, 0)
-    data.at[constant.OUTPUT_ROW - 1, constant.OUTPUT_WINDOWS_COL - 1] = soln.get(windowsVarName, 0)
-    data.at[constant.OUTPUT_ROW - 1, constant.OUTPUT_PROFIT_COL - 1] = objVal
+    outputValues = {
+        constant.OUTPUT_DOORS_COL: soln.get(doorsVarName, 0),
+        constant.OUTPUT_WINDOWS_COL: soln.get(windowsVarName, 0),
+        constant.OUTPUT_PROFIT_COL: objVal
+    }
 
-    # Write the entire modified DataFrame back to the same sheet.
-    # We use index=False and header=False to avoid adding extra labels.
+    rowIndex = constant.OUTPUT_ROW - 1
+
+    # Loop through the prepared dictionary and update each cell in the DataFrame.
+    for col_constant, value in outputValues.items():
+        colIndex = col_constant - 1
+        data.loc[rowIndex, colIndex] = value
+
+    # Write DataFrame back to the Excel sheet.
     data.to_excel(
         constant.DATA_PATH,
         sheet_name=constant.SHEET_NAME,
         index=False,
         header=False
     )
+
