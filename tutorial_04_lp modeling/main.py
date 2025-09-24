@@ -4,8 +4,8 @@ Wyndor Production Planning Optimization Main Program
 
 from io_openpyxl import readDataOpenpyxl, writeDataOpenpyxl
 from io_pandas import readDataPandas, writeDataPandas
-from model import formulateModel, solveModel
-
+from model import formulateModel, solveModel, getOptimalDualVariableValues
+import constant
 
 def main():
     """
@@ -13,23 +13,19 @@ def main():
     """
     print("Wyndor Production Planning Optimization")
     
-  # Read data from Excel file
-    # Two methods available: from io_pandas import read_data, print_results OR from io_openpyxl import read_data, print_results
+    # Read data from Excel file
+    # Two methods available: from io_openpyxl import readDataOpenpyxl OR from io_pandas import readDataPandas
     # You can modify the "from ··· import ··" line to try different data reading methods
-    products_data, products_plants_data, plants_data = read_data()
-    
+    productsData, productsPlantsData, plantsData = readDataOpenpyxl()
+
     # Build model
-    model = formulate_model(products_data, products_plants_data, plants_data)
+    model = formulateModel(products_data, products_plants_data, plants_data)
     
     # Solve model
-    solution_results = solve_model(model)
+    solutionResults, objValue = solveModel(model)
     
     # Extract dual variables
-    dual_variables = extract_dual_variables(model)
-    
-    # Print results
-    print_results(solution_results, dual_variables, products_data, plants_data)
-
+    dualVariables = getOptimalDualVariableValues(model)
 
 if __name__ == "__main__":
     main()
